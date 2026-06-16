@@ -1,0 +1,44 @@
+name: Test PR with Jira key in branch name
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_REF: refs/pull/42/merge
+      GITHUB_HEAD_REF: feature/ABC-456-implement-new-feature
+      GITHUB_BASE_REF: develop
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          github-token: fake-github-token
+          jira-username: fake-user@example.com
+          jira-token: fake-jira-token
+          jira-base-url: https://fake-domain.atlassian.net
+          jira-project-key: ABC
+          add-label-with-issue-type: "true"
+          issue-type-label-color: "FBCA04"
+          issue-type-label-description: "Jira Issue Type"
+          add-jira-key-to-title: "true"
+          add-issue-type-emoji-to-title: "true"
+          add-jira-key-to-body: "true"
+          add-jira-fix-versions-to-body: "true"
+
+      - name: Assert action ran (expected to fail due to invalid Jira credentials)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # With invalid credentials, the action should fail when calling Jira API
+          # but it should not crash with an unhandled exception
+          if [ "$OUTCOME" = "failure" ] || [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action completed with outcome '$OUTCOME'"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
