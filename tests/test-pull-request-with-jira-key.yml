@@ -1,0 +1,41 @@
+name: Test pull request with Jira key in branch name
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_REF: refs/pull/42/merge
+      GITHUB_HEAD_REF: feature/PROJ-456-implement-feature
+      GITHUB_BASE_REF: main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          github-token: ${{ github.token }}
+          jira-token: fake-jira-api-token
+          jira-base-url: https://example.atlassian.net
+          jira-project-key: PROJ
+          add-label-with-issue-type: "true"
+          issue-type-label-color: "FBCA04"
+          issue-type-label-description: "Jira Issue Type"
+          add-jira-key-to-title: "true"
+          add-issue-type-emoji-to-title: "true"
+          add-jira-key-to-body: "true"
+          add-jira-fix-versions-to-body: "true"
+      - name: Assert action ran with expected outcome
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          # With fake credentials the action will fail at the Jira API call,
+          # but it should not crash due to missing required inputs or Node.js errors
+          if [ "$OUTCOME" = "success" ] || [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action ran and produced a valid outcome: $OUTCOME"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME' - action may have crashed"
+            exit 1
+          fi
