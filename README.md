@@ -9,6 +9,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
 | v1.18.0 | [`v1.18.0`](https://github.com/chainguard-actions/contractify-add-jira-info/tree/v1.18.0) | [`da3633d`](https://github.com/contractify/add-jira-info/commit/da3633d0c7afc9b5962210a5b224506974056c5b) |
+| v1.20.0 | [`v1.20.0`](https://github.com/chainguard-actions/contractify-add-jira-info/tree/v1.20.0) | [`5d667e1`](https://github.com/contractify/add-jira-info/commit/5d667e109a32a05a688cc1c300d08a59a5bb2e37) |
 | v1.21.0 | [`v1.21.0`](https://github.com/chainguard-actions/contractify-add-jira-info/tree/v1.21.0) | [`8cebaa1`](https://github.com/contractify/add-jira-info/commit/8cebaa1ebd0d7be32ff45e58fffd049eb0035675) |
 
 ## Privacy
