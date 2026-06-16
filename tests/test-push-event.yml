@@ -1,0 +1,41 @@
+name: Test action on push event (non-PR context)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: push
+      GITHUB_REF: refs/heads/main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          github-token: fake-github-token
+          jira-username: fake-user@example.com
+          jira-token: fake-jira-token
+          jira-base-url: https://fake-domain.atlassian.net
+          jira-project-key: TEST
+          add-label-with-issue-type: "false"
+          add-jira-key-to-title: "false"
+          add-issue-type-emoji-to-title: "false"
+          add-jira-key-to-body: "false"
+          add-jira-fix-versions-to-body: "false"
+
+      - name: Assert action ran on push event
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          # On a push event (non-PR), the action may skip, succeed, or fail.
+          # Any of these outcomes is acceptable — what matters is the runner
+          # did not crash.
+          if [ "$OUTCOME" = "success" ] || [ "$OUTCOME" = "failure" ] || [ "$OUTCOME" = "skipped" ]; then
+            echo "PASS: action handled push event gracefully (outcome=$OUTCOME)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi

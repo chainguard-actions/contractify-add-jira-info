@@ -1,0 +1,41 @@
+{
+  "name": "add-jira-info",
+  "version": "1.20.0",
+  "description": "Automatically add Jira info to a pull request.",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc && ncc build lib/main.js",
+    "format": "prettier --write \"**/*.ts\"",
+    "format-check": "prettier --check \"**/*.ts\"",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contractify/add-jira-info.git"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "jira",
+    "labels"
+  ],
+  "author": "Contractify",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^3.0.0",
+    "@actions/github": "^9.0.0",
+    "@actions/http-client": "^4.0.0",
+    "nock": "^14.0.11"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/minimatch": "^5.1.2",
+    "@types/node": "^25.5.0",
+    "@vercel/ncc": "^0.38.4",
+    "jest": "^30.3.0",
+    "prettier": "^3.8.1",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}
