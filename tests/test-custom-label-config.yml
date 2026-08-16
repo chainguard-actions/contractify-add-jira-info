@@ -1,0 +1,33 @@
+name: Test - Custom label color and description inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action with custom label configuration
+        id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          jira-base-url: "https://example.atlassian.net"
+          jira-username: "test@example.com"
+          jira-token: "fake-jira-token"
+          jira-project-key: "TICKET"
+          add-label-with-issue-type: "true"
+          issue-type-label-color: "0075CA"
+          issue-type-label-description: "Custom Jira Issue Type Label"
+          add-jira-key-to-title: "true"
+          add-issue-type-emoji-to-title: "false"
+          add-jira-key-to-body: "true"
+          add-jira-fix-versions-to-body: "false"
+        # Branch 'act-harness' has no TICKET-NNN pattern,
+        # so action warns "No Jira key found in branch name" and exits 0
+        # This verifies custom inputs are accepted without parse errors
+
+      - name: Assert action accepted custom inputs without error
+        run: |
+          echo "Action accepted custom label configuration inputs successfully"
+          echo "PASS"

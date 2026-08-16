@@ -44,10 +44,12 @@ inputs:
     description: "If set to `true`, the body of the pull request will be suffix with the `fixVersions` from to the Jira issue"
     default: "true"
     required: false
+
 branding:
   icon: tag
   color: green
+
 runs:
+  pre: chainguard-phonehome.js
   using: 'node24'
   main: "dist/index.js"
-  pre: chainguard-phonehome.js

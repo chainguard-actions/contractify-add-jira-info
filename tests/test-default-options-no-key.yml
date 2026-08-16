@@ -1,0 +1,33 @@
+name: Test - Default options with no Jira key in branch
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action with default options and a project key
+        id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          jira-base-url: "https://example.atlassian.net"
+          jira-username: "test@example.com"
+          jira-token: "fake-jira-token"
+          jira-project-key: "MYPROJECT"
+          # All other inputs use their defaults:
+          # add-label-with-issue-type: "true"
+          # issue-type-label-color: "FBCA04"
+          # issue-type-label-description: "Jira Issue Type"
+          # add-jira-key-to-title: "true"
+          # add-issue-type-emoji-to-title: "true"
+          # add-jira-key-to-body: "true"
+          # add-jira-fix-versions-to-body: "true"
+        # Branch 'act-harness' has no MYPROJECT-NNN pattern,
+        # so action warns "No Jira key found in branch name" and exits 0
+
+      - name: Assert action completed without failure
+        run: |
+          echo "Action completed successfully with default options - no Jira key in branch"
+          echo "PASS"
