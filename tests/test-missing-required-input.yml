@@ -1,0 +1,33 @@
+name: Test - Missing required input fails gracefully
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Test that the action fails when a required input (jira-token) is missing.
+      # The @actions/core getInput with required:true throws an error when the
+      # input is not provided, causing the action to exit with a non-zero code.
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          jira-username: test-user
+          # jira-token intentionally omitted (required input)
+          jira-base-url: https://fake-domain.atlassian.net
+          jira-project-key: MYPROJECT
+        continue-on-error: true
+
+      - name: Assert action failed due to missing required input
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail when required input jira-token is missing, got: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed when required input was missing"

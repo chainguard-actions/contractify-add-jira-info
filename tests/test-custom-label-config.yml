@@ -1,0 +1,34 @@
+name: Test - Custom label configuration
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Test that the action accepts custom label color and description inputs.
+      # Under act, branch is 'act-harness' which won't match project key 'TICKET',
+      # so the action exits gracefully after logging context details.
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          jira-username: test-user
+          jira-token: fake-jira-token
+          jira-base-url: https://fake-domain.atlassian.net
+          jira-project-key: TICKET
+          add-label-with-issue-type: "true"
+          issue-type-label-color: "FF0000"
+          issue-type-label-description: "Custom Jira Issue Type Label"
+          add-jira-key-to-title: "true"
+          add-issue-type-emoji-to-title: "true"
+          add-jira-key-to-body: "true"
+          add-jira-fix-versions-to-body: "true"
+
+      - name: Assert action completed without failure
+        run: |
+          echo "Action accepted custom label configuration and exited gracefully"
+          echo "No TICKET-NNN key found in 'act-harness' branch, so action warned and exited"
+          echo "PASS"

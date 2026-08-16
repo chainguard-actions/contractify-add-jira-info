@@ -1,0 +1,30 @@
+name: Test - No Jira key in branch name
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Under act, github.context.ref = refs/heads/act-harness
+      # With jira-project-key=MYPROJECT, no key will be found in "act-harness"
+      # The action should warn and exit gracefully (exit 0)
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          jira-username: test-user
+          jira-token: fake-jira-token
+          jira-base-url: https://fake-domain.atlassian.net
+          jira-project-key: MYPROJECT
+          add-label-with-issue-type: "false"
+          add-jira-key-to-title: "false"
+          add-jira-key-to-body: "false"
+          add-jira-fix-versions-to-body: "false"
+
+      - name: Assert action completed without failure
+        run: |
+          echo "Action completed successfully (no Jira key found in branch, graceful exit)"
+          echo "PASS"

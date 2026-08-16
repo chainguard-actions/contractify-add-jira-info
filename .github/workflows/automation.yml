@@ -1,0 +1,34 @@
+name: Automation
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  automation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+    - name: Add Jira issue type as label
+      uses: ./
+      if: ${{ github.actor != 'dependabot[bot]' }}
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        jira-base-url: ${{ secrets.JIRA_BASE_URL }}
+        jira-username: ${{ secrets.JIRA_USERNAME }}
+        jira-token: ${{ secrets.JIRA_ACCESS_TOKEN }}
+        jira-project-key: CTR
+
+    - uses: toshimaru/auto-author-assign@4d585cc37690897bd9015942ed6e766aa7cdb97f # v3.0.1
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
