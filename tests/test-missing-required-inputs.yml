@@ -1,0 +1,39 @@
+name: Test action with all optional features disabled
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action with all optional Jira enrichment features disabled
+        id: action
+        uses: .
+        continue-on-error: true
+        with:
+          github-token: ${{ github.token }}
+          jira-username: test-user@example.com
+          jira-token: some-token
+          jira-base-url: https://nonexistent-jira-instance-abc987.atlassian.net
+          jira-project-key: "PROJ"
+          add-label-with-issue-type: "false"
+          add-jira-key-to-title: "false"
+          add-issue-type-emoji-to-title: "false"
+          add-jira-key-to-body: "false"
+          add-jira-fix-versions-to-body: "false"
+
+      - name: Assert action completed successfully
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # Under act, the branch is 'act-harness' which does not match the
+          # Jira key pattern 'PROJ-NNN'. The action exits early with a warning
+          # ("No Jira key found in branch name") and returns success.
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action completed with outcome=$OUTCOME (no Jira key in branch, early exit)"
+          else
+            echo "FAIL: unexpected outcome: $OUTCOME"
+            exit 1
+          fi
