@@ -1,0 +1,39 @@
+name: Test - All optional features disabled
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action with all optional features disabled
+        id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          jira-username: test-user
+          jira-token: fake-jira-token
+          jira-base-url: https://example.atlassian.net
+          jira-project-key: MYPROJECT
+          add-label-with-issue-type: "false"
+          add-jira-key-to-title: "false"
+          add-issue-type-emoji-to-title: "false"
+          add-jira-key-to-body: "false"
+          add-jira-fix-versions-to-body: "false"
+        continue-on-error: true
+
+      - name: Assert action succeeded with all features disabled
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          # With all features disabled and no Jira key in branch name 'act-harness',
+          # the action should warn and exit gracefully (exit 0)
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action exited gracefully with all features disabled"
+          else
+            echo "FAIL: expected success outcome but got: $OUTCOME"
+            exit 1
+          fi

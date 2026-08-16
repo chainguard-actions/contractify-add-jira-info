@@ -1,0 +1,40 @@
+name: Test - No project key provided (fetches from Jira API)
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action without jira-project-key (will attempt API call, fail gracefully)
+        id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          jira-username: test-user
+          jira-token: fake-jira-token
+          jira-base-url: https://invalid-jira-host-that-does-not-exist.example.com
+          # jira-project-key intentionally omitted - action will try to fetch from API
+          add-label-with-issue-type: "false"
+          add-jira-key-to-title: "false"
+          add-jira-key-to-body: "false"
+          add-jira-fix-versions-to-body: "false"
+        continue-on-error: true
+
+      - name: Assert action completed (graceful exit after API failure)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          # When jira-project-key is not set, the action tries to fetch project keys
+          # from Jira API. On failure it catches the error and continues.
+          # With no project keys loaded, no Jira key can be found in the branch name,
+          # so the action warns and exits gracefully (success).
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action exited gracefully after failed API call"
+          else
+            echo "FAIL: expected success outcome but got: $OUTCOME"
+            exit 1
+          fi
