@@ -8,6 +8,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit | Hardening report |
 |---------|-----|-----------------|------------------|
+| v1 | [`v1`](https://github.com/chainguard-actions/contractify-add-jira-info/tree/v1) | [`dcd1970`](https://github.com/contractify/add-jira-info/commit/dcd19700c460b6008db60f4dfd2d649bf9daa76c) | [`HARDENING.md`](https://github.com/chainguard-actions/contractify-add-jira-info/blob/v1/HARDENING.md) |
 | v1.18.0 | [`v1.18.0`](https://github.com/chainguard-actions/contractify-add-jira-info/tree/v1.18.0) | [`da3633d`](https://github.com/contractify/add-jira-info/commit/da3633d0c7afc9b5962210a5b224506974056c5b) | [`HARDENING.md`](https://github.com/chainguard-actions/contractify-add-jira-info/blob/v1.18.0/HARDENING.md) |
 | v1.19.0 | [`v1.19.0`](https://github.com/chainguard-actions/contractify-add-jira-info/tree/v1.19.0) | [`d425f81`](https://github.com/contractify/add-jira-info/commit/d425f81de56dcd9dfa161de2e2ba8d26672d4b28) | [`HARDENING.md`](https://github.com/chainguard-actions/contractify-add-jira-info/blob/v1.19.0/HARDENING.md) |
 | v1.20.0 | [`v1.20.0`](https://github.com/chainguard-actions/contractify-add-jira-info/tree/v1.20.0) | [`5d667e1`](https://github.com/contractify/add-jira-info/commit/5d667e109a32a05a688cc1c300d08a59a5bb2e37) | [`HARDENING.md`](https://github.com/chainguard-actions/contractify-add-jira-info/blob/v1.20.0/HARDENING.md) |
