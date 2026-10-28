@@ -1,0 +1,35 @@
+name: Test multiple project keys with features disabled
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          jira-username: test-user
+          jira-token: test-jira-token
+          jira-base-url: http://127.0.0.1:1
+          jira-project-key: |-
+            FOO
+            BAR
+          add-label-with-issue-type: "false"
+          issue-type-label-color: "00FF00"
+          issue-type-label-description: "Custom description"
+          add-jira-key-to-title: "false"
+          add-issue-type-emoji-to-title: "false"
+          add-jira-key-to-body: "false"
+          add-jira-fix-versions-to-body: "false"
+      - name: Assert action exited successfully
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected success with multiple project keys"
+            exit 1
+          fi
+          echo "PASS"

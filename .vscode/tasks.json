@@ -1,0 +1,44 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "format-check",
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"label": "npm: format-check",
+			"detail": "prettier --check \"**/*.ts\""
+		},
+		{
+			"type": "npm",
+			"script": "format",
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"label": "npm: format",
+			"detail": "prettier --write \"**/*.ts\""
+		},
+		{
+			"type": "npm",
+			"script": "test",
+			"problemMatcher": [],
+			"label": "npm: tests",
+			"detail": "npm run test -- --silent=false"
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "npm run build"
+		},
+		{
+			"type": "shell",
+			"problemMatcher": [],
+			"label": "git: update tag",
+			"detail": "git tag -fa v1 -m 'Update v1 tag' && git push origin v1 --force",
+			"command": "git tag -fa v1 -m 'Update v1 tag' && git push origin v1 --force"
+		}
+	]
+}
